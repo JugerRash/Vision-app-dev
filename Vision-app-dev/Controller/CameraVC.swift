@@ -24,6 +24,7 @@ class CameraVC: UIViewController {
     var captureSession : AVCaptureSession!// this take the input for the devices and getting the output from it
     var cameraOutput : AVCapturePhotoOutput! // To hanlde the output of the capture session
     var previewLayer : AVCaptureVideoPreviewLayer!// this to show the camera on the view
+    var photoData : Data? // to get the photo that captured
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,6 +38,10 @@ class CameraVC: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(didTapCameraView))
+        tap.numberOfTapsRequired = 1
+        
         captureSession = AVCaptureSession()
         captureSession.sessionPreset = AVCaptureSession.Preset.hd1920x1080 // this to take all the screen size
         let backCamera = AVCaptureDevice.default(for: AVMediaType.video)
@@ -59,6 +64,7 @@ class CameraVC: UIViewController {
                 previewLayer.connection?.videoOrientation = AVCaptureVideoOrientation.portrait
                 
                 cameraView.layer.addSublayer(previewLayer)
+                cameraView.addGestureRecognizer(tap)
                 captureSession.startRunning()
             }
             
@@ -66,7 +72,28 @@ class CameraVC: UIViewController {
             debugPrint(error)
         }
     }
+    
+   @objc func didTapCameraView(){
+        let settings = AVCapturePhotoSettings()
+        let previewPixelType = settings.availablePreviewPhotoPixelFormatTypes.first! // this will take the generic photo of ios
+        let previewFormat = [kCVPixelBufferPixelFormatTypeKey as String : previewPixelType , kCVPixelBufferWidthKey as String : 160 , kCVPixelBufferHeightKey as String : 160 ] // this to take a small size of the captured image 
+    
+        settings.previewPhotoFormat = previewFormat
+        cameraOutput.capturePhoto(with: settings, delegate: self)
+    }
 
+}
 
+extension CameraVC : AVCapturePhotoCaptureDelegate {
+    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+        if let error = error {
+            debugPrint(error)
+        }else {
+            photoData = photo.fileDataRepresentation()
+            let image = UIImage(data: photoData!)
+            
+            self.captureImageView.image = image
+        }
+    }
 }
 
