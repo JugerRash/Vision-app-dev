@@ -8,6 +8,8 @@
 
 import UIKit
 import AVFoundation // this lib will allow us to use the camera and all the functions
+import CoreML // this will allow us to use the basic functions of ML
+import Vision // this is resposible about objects and things
 
 class CameraVC: UIViewController {
     
@@ -82,6 +84,25 @@ class CameraVC: UIViewController {
         settings.previewPhotoFormat = settings.embeddedThumbnailPhotoFormat
         cameraOutput.capturePhoto(with: settings, delegate: self)
     }
+    
+    func resultMethod(request : VNRequest , error : Error?){
+        guard let results = request.results as? [VNClassificationObservation] else {
+            return
+        }
+        
+        for classification in results {
+            if classification.confidence < 0.5 {
+                self.identificationLbl.text = "I'm not sure what is this is.please try again"
+                self.confidenceLbl.text = ""
+                break
+            }else {
+                self.identificationLbl.text = classification.identifier
+                self.confidenceLbl.text = "CONFIDENCE: \(Int(classification.confidence * 100 ))%"
+                break
+            }
+        }
+        
+    }
 
 }
 
@@ -92,6 +113,15 @@ extension CameraVC : AVCapturePhotoCaptureDelegate {
         }else {
             photoData = photo.fileDataRepresentation()
             let image = UIImage(data: photoData!)
+            
+            do{
+                let model = try VNCoreMLModel(for: SqueezeNet().model) // this is the brain of the Model
+                let request = VNCoreMLRequest(model: model, completionHandler: resultMethod(request:error:))//this is the thought of our training
+                let handler = VNImageRequestHandler(data: photoData!) // this for anlyze the photo and give us the results
+                try handler.perform([request])
+            }catch {
+                debugPrint(error)
+            }
             
             self.captureImageView.image = image
         }
