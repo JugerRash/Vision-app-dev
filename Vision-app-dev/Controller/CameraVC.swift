@@ -11,6 +11,13 @@ import AVFoundation // this lib will allow us to use the camera and all the func
 import CoreML // this will allow us to use the basic functions of ML
 import Vision // this is resposible about objects and things
 
+//this enum just for the status of the flash light
+enum FlashState {
+    case off
+    case on
+}
+
+
 class CameraVC: UIViewController {
     
     //Outlets -:
@@ -27,6 +34,7 @@ class CameraVC: UIViewController {
     var cameraOutput : AVCapturePhotoOutput! // To hanlde the output of the capture session
     var previewLayer : AVCaptureVideoPreviewLayer!// this to show the camera on the view
     var photoData : Data? // to get the photo that captured
+    var flashControlState : FlashState = .off
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,6 +81,8 @@ class CameraVC: UIViewController {
         }catch {
             debugPrint(error)
         }
+        
+        
     }
     
    @objc func didTapCameraView(){
@@ -82,6 +92,12 @@ class CameraVC: UIViewController {
 //        let previewFormat = [kCVPixelBufferPixelFormatTypeKey as String : previewPixelType , kCVPixelBufferWidthKey as String : 160 , kCVPixelBufferHeightKey as String : 160 ] // this to take a small size of the captured image
     
         settings.previewPhotoFormat = settings.embeddedThumbnailPhotoFormat
+    if flashControlState == .off {
+        settings.flashMode = .off
+    }else {
+        settings.flashMode = .on
+    }
+    
         cameraOutput.capturePhoto(with: settings, delegate: self)
     }
     
@@ -103,6 +119,18 @@ class CameraVC: UIViewController {
         }
         
     }
+    
+    //Actions -:
+    @IBAction func flashBtnWasPressed(_ sender : Any) {
+        switch flashControlState {
+        case .off :
+            self.flashControlState = .on
+            self.flashBtn.setTitle("FLASH ON", for: .normal)
+        case .on :
+            self.flashControlState = .off
+            self.flashBtn.setTitle("FLASH OFF", for: .normal)
+        }
+    }
 
 }
 
@@ -122,6 +150,7 @@ extension CameraVC : AVCapturePhotoCaptureDelegate {
             }catch {
                 debugPrint(error)
             }
+            
             
             self.captureImageView.image = image
         }
