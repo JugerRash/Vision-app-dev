@@ -59,6 +59,9 @@
                                     <constraint firstAttribute="height" constant="128" id="zoq-l6-DU6"/>
                                 </constraints>
                             </imageView>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="tRH-YE-iXN">
+                                <rect key="frame" x="302" y="573" width="20" height="20"/>
+                            </activityIndicatorView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kvt-l6-OBR" customClass="RoundedShadowButton" customModule="Vision_app_dev" customModuleProvider="target">
                                 <rect key="frame" x="20" y="614" width="100" height="33"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -83,9 +86,11 @@
                             <constraint firstItem="Kvt-l6-OBR" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="JKk-j0-aSV"/>
                             <constraint firstItem="PUv-GX-67F" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="MeU-TL-XMr"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="9cy-ox-Hf0" secondAttribute="trailing" constant="20" id="Qiq-F9-cu6"/>
+                            <constraint firstItem="tRH-YE-iXN" firstAttribute="centerX" secondItem="TVt-l9-RZa" secondAttribute="centerX" id="R4s-Ea-4sh"/>
                             <constraint firstItem="PUv-GX-67F" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Ri0-tj-LxP"/>
                             <constraint firstItem="9cy-ox-Hf0" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="30" id="bBB-5f-ic2"/>
                             <constraint firstItem="PUv-GX-67F" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="i7N-E4-Jnh"/>
+                            <constraint firstItem="tRH-YE-iXN" firstAttribute="centerY" secondItem="TVt-l9-RZa" secondAttribute="centerY" id="r41-pb-dZX"/>
                             <constraint firstItem="9cy-ox-Hf0" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="rlh-VT-phD"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
@@ -97,6 +102,7 @@
                         <outlet property="flashBtn" destination="Kvt-l6-OBR" id="6zo-kU-WT8"/>
                         <outlet property="identificationLbl" destination="gnW-AE-Q2o" id="8gm-gd-Ohu"/>
                         <outlet property="roundedLblView" destination="9cy-ox-Hf0" id="5cI-Qn-Hnv"/>
+                        <outlet property="spinner" destination="tRH-YE-iXN" id="nGO-za-xXd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
